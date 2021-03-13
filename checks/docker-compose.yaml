@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  checks:
+    build:
+      context: .
+    image: checks:$IMAGE_TAG
+
+  type_check:
+    image: cytopia/mypy
+    entrypoint: mypy --strict /app/checks/
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
+
+  lint_check:
+    image: pipelinecomponents/flake8
+    entrypoint: flake8 /app/checks/
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
+
+  tests:
+    image: checks:$IMAGE_TAG
+    entrypoint: pytest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
