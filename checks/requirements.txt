@@ -1,5 +1,5 @@
-pytest==6.2.2
-mock==4.0.3
 aiohttp==3.7.4.post0
 aioresponses==0.7.2
-
+confluent-kafka==1.6.0
+mock==4.0.3
+pytest==6.2.2

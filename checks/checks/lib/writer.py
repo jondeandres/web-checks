@@ -11,7 +11,7 @@ class Writer(ABC):
     to be used.
     """
     @abstractmethod
-    def write(self, objects: typing.List[Result]) -> None:
+    def write(self, results: typing.List[Result]) -> None:
         """
         Writes the received objects into a different system
 
