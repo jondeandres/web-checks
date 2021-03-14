@@ -7,11 +7,6 @@ from checks.lib.repository import Repository
 from checks.lib.writer import Writer
 
 
-class DummyJob:
-    async def run(self, obj):
-      return obj * 2
-
-
 class TestWorker:
     def test_run(self, event_loop):
         repo = mock.Mock(spec=Repository)
