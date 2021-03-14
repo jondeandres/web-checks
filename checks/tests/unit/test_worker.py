@@ -19,7 +19,7 @@ class TestWorker:
 
         job_future = asyncio.Future()
         job_future.set_result(1)
-        job = mock.Mock(spec=Job)
+        job = mock.Mock()
         job.run.return_value = job_future
 
         writer = mock.Mock(spec=Writer)
