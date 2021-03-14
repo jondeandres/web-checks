@@ -8,7 +8,7 @@ class Job(ABC):
     """Represents a job to be executed by a Worker
     """
     @abstractmethod
-    def run(self, obj: typing.Any) -> Result:
+    async def run(self, obj: typing.Any) -> Result:
         """
         Runs the logic using a single object as input
 
