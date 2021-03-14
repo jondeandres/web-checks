@@ -17,7 +17,8 @@ class HTTPCheck(Job):
     async def run(self, target: Target) -> HTTPCheckResult:
         """
         It performs get requests to received target's URL and returns a result
-        with the response time, status code, URL, regex match result and error, if any.
+        with the response time, status code, URL, regex match result and error,
+        if any.
         """
         async with aiohttp.ClientSession() as session:
             start_time = time.time()
@@ -27,15 +28,22 @@ class HTTPCheck(Job):
                     re_match = None
 
                     if target.regex:
-                        re_match = bool(target.regex and re.match(target.regex, await response.text()) is not None)
+                        re_match = bool(target.regex and
+                                        re.match(target.regex,
+                                                 await response.text())
+                                        is not None)
 
                     return HTTPCheckResult(url=target.url,
-                                           response_time=self._floor_to_milliseconds(time.time() - start_time),
+                                           response_time=self._floor_to_milliseconds(
+                                               time.time() - start_time
+                                            ),
                                            status_code=response.status,
                                            re_match=re_match)
             except ClientError as exc:
                 return HTTPCheckResult(url=target.url,
-                                       response_time=self._floor_to_milliseconds(time.time() - start_time),
+                                       response_time=self._floor_to_milliseconds(
+                                           time.time() - start_time
+                                       ),
                                        error=repr(exc))
 
     @staticmethod

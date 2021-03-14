@@ -3,6 +3,7 @@ import typing
 
 from checks.lib.result import Result
 
+
 @dataclass
 class HTTPCheckResult(Result):
     """

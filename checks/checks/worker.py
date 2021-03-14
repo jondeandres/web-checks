@@ -6,10 +6,12 @@ from checks.lib.writer import Writer
 
 
 class Worker:
-    """Service class that orchestrates the interaction between the data source and output
+    """
+    Service class that orchestrates the interaction between
+    the data source and output
 
-    For each object returned by the Repository it'll call the received Job. The collected
-    result is used to call the Writer.
+    For each object returned by the Repository it'll call the
+    received Job. The collected result is used to call the Writer.
 
     """
     def __init__(self, job: Job, repository: Repository, writer: Writer):
