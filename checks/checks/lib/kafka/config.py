@@ -15,3 +15,6 @@ class Config:
     brokers: typing.List[str]
     acks: typing.Optional[str] = field(default=_ACKS)
     retries: typing.Optional[int] = field(default=_MAX_RETRIES)
+    ssl_key_path: typing.Optional[str] = None
+    ssl_certificate_path: typing.Optional[str] = None
+    ssl_ca_path: typing.Optional[str] = None

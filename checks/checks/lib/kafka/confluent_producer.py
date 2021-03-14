@@ -45,12 +45,25 @@ class ConfluentProducer(Producer):
         self.__producer.flush(timeout)
 
     def __build_config(self, config: Config) -> typing.Dict[str, typing.Any]:
-        return {
+        options = {
             'bootstrap.servers': ','.join(config.brokers),
             'acks': config.acks,
             'retries': config.retries,
             'error_cb': self.__error_cb
         }
+
+        if config.ssl_key_path:
+            options['security.protocol'] = 'ssl'
+            options['ssl.key.location'] = config.ssl_key_path
+
+        if config.ssl_certificate_path:
+            options['ssl.certificate.location'] = config.ssl_certificate_path
+
+        if config.ssl_ca_path:
+            options['ssl.ca.location'] = config.ssl_ca_path
+
+        return options
+
 
     @staticmethod
     def __error_cb(error: KafkaError) -> None:
