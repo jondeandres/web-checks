@@ -29,6 +29,7 @@ class Worker:
           job: A Job that implements the logic to execute per received object
           repository: A Repository that abtracts the data input
           writer: A Writer that handles the data output
+          period: Time period integer between job executions
         """
         self.__job = job
         self.__repository = repository
