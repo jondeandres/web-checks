@@ -64,7 +64,6 @@ class ConfluentProducer(Producer):
 
         return options
 
-
     @staticmethod
     def __error_cb(error: KafkaError) -> None:
         log.error('Kafka error: %s', error)

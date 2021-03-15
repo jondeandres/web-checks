@@ -34,11 +34,11 @@ class Worker:
         self.__job = job
         self.__repository = repository
         self.__writer = writer
-        self.__last_run = 0
+        self.__last_run: float = 0.0
         self.__period = period
         self.__is_running = True
 
-    def stop(self):
+    def stop(self) -> None:
         self.__is_running = False
 
     async def run(self) -> None:
@@ -50,12 +50,12 @@ class Worker:
                 time.sleep(_SLEEP_PERIOD)
 
     async def run_job(self) -> None:
-            results = await asyncio.gather(*[
-                    self.__job.run(obj)
-                    for obj in self.__repository.get_objects()
-            ])
+        results = await asyncio.gather(*[
+            self.__job.run(obj)
+            for obj in self.__repository.get_objects()
+        ])
 
-            self.__writer.write(results)
+        self.__writer.write(results)
 
     def __should_run(self) -> bool:
         return self.__last_run < (time.time() - self.__period)

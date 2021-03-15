@@ -10,7 +10,7 @@ from checks.lib.serializers import ResultToJSON
 from checks.jobs.http_check import HTTPCheck
 
 
-def bootstrap():
+def bootstrap() -> None:
     args = _parse_args()
 
     worker = Worker(HTTPCheck(),
@@ -20,14 +20,14 @@ def bootstrap():
     asyncio.run(worker.run())
 
 
-def _build_producer(args):
+def _build_producer(args: argparse.Namespace) -> ConfluentProducer:
     return ConfluentProducer(KafkaConfig(brokers=args.brokers,
                                          ssl_key_path=args.ssl_key_path,
                                          ssl_certificate_path=args.ssl_cert_path,
                                          ssl_ca_path=args.ssl_ca_path))
 
 
-def _parse_args():
+def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--brokers", required=True, nargs='+')
     parser.add_argument("--topic", required=True)
