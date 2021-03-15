@@ -59,6 +59,12 @@ services:
       POSTGRES_USER: aiven
       POSTGRES_PASSWORD: aiven
 
+  test_postgres:
+    image: postgres:13.2
+    environment:
+      POSTGRES_USER: aiven
+      POSTGRES_PASSWORD: aiven
+
   zookeeper:
     image: confluentinc/cp-zookeeper:5.3.0
     environment:
