@@ -7,6 +7,7 @@ from checks.lib.writer import Writer
 
 
 _DEFAULT_PERIOD = 5
+_SLEEP_PERIOD = 1
 
 
 class Worker:
@@ -18,7 +19,11 @@ class Worker:
     received Job. The collected result is used to call the Writer.
 
     """
-    def __init__(self, job: Job, repository: Repository, writer: Writer, period: int = _DEFAULT_PERIOD):
+    def __init__(self,
+                 job: Job,
+                 repository: Repository,
+                 writer: Writer,
+                 period: int = _DEFAULT_PERIOD):
         """
         Args:
           job: A Job that implements the logic to execute per received object
@@ -38,15 +43,18 @@ class Worker:
     async def run(self) -> None:
         while self.__is_running:
             if self.__should_run():
-                results = await asyncio.gather(*[
-                        self.__job.run(obj)
-                        for obj in self.__repository.get_objects()
-                ])
-
-                self.__writer.write(results)
+                await self.run_job()
                 self.__last_run = time.time()
             else:
-                time.sleep(1)
+                time.sleep(_SLEEP_PERIOD)
+
+    async def run_job(self) -> None:
+            results = await asyncio.gather(*[
+                    self.__job.run(obj)
+                    for obj in self.__repository.get_objects()
+            ])
+
+            self.__writer.write(results)
 
     def __should_run(self) -> bool:
         return self.__last_run < (time.time() - self.__period)

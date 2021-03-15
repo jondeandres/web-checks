@@ -8,7 +8,7 @@ from checks.lib.writer import Writer
 
 
 class TestWorker:
-    def test_run(self, event_loop):
+    def test_run_job(self, event_loop):
         repo = mock.Mock(spec=Repository)
         repo.get_objects.return_value = [1, 2, 3]
 
@@ -20,7 +20,7 @@ class TestWorker:
         writer = mock.Mock(spec=Writer)
 
         worker = Worker(job, repo, writer)
-        event_loop.run_until_complete(worker.run())
+        event_loop.run_until_complete(worker.run_job())
 
         repo.get_objects.assert_called_with()
         job.run.assert_has_calls([
