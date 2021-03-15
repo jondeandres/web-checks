@@ -1,0 +1,4 @@
+confluent-kafka==1.6.0
+mock==4.0.3
+pytest==6.2.2
+psycopg2==2.8.6

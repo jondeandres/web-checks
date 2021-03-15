@@ -1,0 +1,93 @@
+version: '3.7'
+
+services:
+  writer:
+    build:
+      context: .
+    image: writer:$IMAGE_TAG
+
+  type_check:
+    image: cytopia/mypy
+    entrypoint: mypy --strict /app/writer/
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
+
+  lint_check:
+    image: pipelinecomponents/flake8
+    entrypoint: flake8 /app/writer/
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
+
+  run:
+    image: writer:$IMAGE_TAG
+    entrypoint: python /app/bin/run
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
+
+  tests:
+    image: writer:$IMAGE_TAG
+    entrypoint: pytest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app/
+
+  kafka:
+    image: confluentinc/cp-kafka:5.3.0
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  postgres:
+    image: postgres:13.2
+    environment:
+      POSTGRES_USER: aiven
+      POSTGRES_PASSWORD: aiven
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+
+
+  test_kafka:
+    image: confluentinc/cp-kafka:5.3.0
+    depends_on:
+      - test_zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: test_zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://test_kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  test_zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  tests_ci:
+    image: writer:$IMAGE_TAG
+    entrypoint: pytest tests/
+    stdin_open: true
+    tty: true
