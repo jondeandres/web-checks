@@ -4,9 +4,7 @@ import logging
 import random
 import time
 import threading
-from confluent_kafka.admin import (
-    AdminClient
-)
+
 from confluent_kafka import Consumer
 
 from checks.worker import Worker
@@ -20,7 +18,6 @@ from checks.jobs.http_check import HTTPCheck
 
 
 brokers = ['test_kafka:29092']
-admin = AdminClient({'bootstrap.servers': '.'.join(brokers)})
 log = logging.getLogger(__name__)
 
 
