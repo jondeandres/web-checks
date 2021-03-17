@@ -1,3 +1,4 @@
+import logging
 import math
 import re
 import time
@@ -8,6 +9,9 @@ from aiohttp.client_exceptions import ClientError
 from checks.lib.job import Job
 from checks.model.target import Target
 from checks.model.http_check_result import HTTPCheckResult
+
+
+log = logging.getLogger(__name__)
 
 
 class HTTPCheck(Job):
@@ -40,6 +44,8 @@ class HTTPCheck(Job):
                                            status_code=response.status,
                                            re_match=re_match)
             except ClientError as exc:
+                log.error('Error found on request to %s', target.url, exc_info=True)
+
                 return HTTPCheckResult(url=target.url,
                                        response_time=self._floor_to_milliseconds(
                                            time.time() - start_time
