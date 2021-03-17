@@ -1,6 +1,7 @@
 import mock
 
 from writer.lib.kafka.consumer import Consumer
+from writer.lib.kafka.config import Config
 
 
 class TestConsumer:
@@ -17,8 +18,11 @@ class TestConsumer:
 
         confluent_consumer.consume.return_value = [message1, message2]
 
-        consumer = Consumer(['topic'],
-                            {'brokers': ['kafka'], 'group_id': 'tests'})
+        consumer = Consumer(
+            Config(topics=['topic'],
+            brokers=['kafka'],
+            group_id='tests')
+        )
 
         result = consumer.consume(100, timeout=5)
 

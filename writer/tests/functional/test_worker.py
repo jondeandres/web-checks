@@ -10,6 +10,7 @@ from writer.worker import Worker
 from writer.deserializers.json_to_http_check_result import JSONToHTTPCheckResult
 from writer.jobs.write_http_check_results import WriteHTTPCheckResults
 from writer.lib.kafka.consumer import Consumer
+from writer.lib.kafka.config import Config
 
 
 def worker_thread(worker):
@@ -23,11 +24,11 @@ class TestWorker:
         topic = 'functional-tests'
 
         consumer = Consumer(
-            [topic],
-            {
-                'brokers': ['test_kafka:29092'],
-                'group_id': 'functional-tests'
-            }
+            Config(
+                topics=[topic],
+                brokers=['test_kafka:29092'],
+                group_id='functional-tests'
+            )
         )
         worker = Worker(
             consumer,
