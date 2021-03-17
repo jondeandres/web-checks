@@ -17,7 +17,8 @@ _LOGGING_OPTIONS = ['DEBUG', 'INFO', 'WARN', 'WARNING', 'ERROR', 'CRITICAL']
 def bootstrap() -> None:
     args = _parse_args()
 
-    logging.basicConfig(level=args.log_level)
+    logging.basicConfig(level=args.log_level,
+                        format=_DEFAULT_LOGGING_FORMAT)
 
     conn = db.connect(database=args.db_name,
                       user=args.db_user,

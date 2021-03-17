@@ -1,4 +1,3 @@
-import logging
 import typing
 
 import psycopg2
@@ -7,9 +6,6 @@ import psycopg2.extras
 
 from writer.lib.job import Job
 from writer.model.http_check_result import HTTPCheckResult
-
-
-log = logging.getLogger(__name__)
 
 
 class WriteHTTPCheckResults(Job):
@@ -33,5 +29,3 @@ class WriteHTTPCheckResults(Job):
             psycopg2.extras.execute_values (
                 cur, insert_query, data
             )
-
-            log.info('Inserting %d rows', len(data))

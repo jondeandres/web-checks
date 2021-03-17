@@ -1,8 +1,14 @@
+import logging
+
+
 from writer.lib.kafka.consumer import Consumer
 from writer.lib.job import Job
 from writer.lib.deserializer import Deserializer
 
 _BATCH_SIZE = 5
+
+
+log = logging.getLogger(__name__)
 
 
 class Worker:
@@ -24,6 +30,11 @@ class Worker:
             messages = self.__consumer.consume(_BATCH_SIZE)
 
             if messages:
+                log.info(
+                    'Running job %s for %d messages',
+                    type(self.__job).__name__,
+                    len(messages)
+                )
                 self.__job.run(self.__deserializer.loads(msg)
                                for msg in messages)
 
