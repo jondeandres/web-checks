@@ -26,6 +26,17 @@ class Worker:
         self.__is_running = False
 
     def run(self) -> None:
+        """
+        Consumes messages using the consumer and pass those messages
+        to the job injected in the worker instance.
+
+        Exceptions are not handled so we are letting the process to
+        crash. This is, IMHO, the safest and most straightforward solution.
+
+        If we don't want to let the process we'd need to seek the consumer
+        to the previous commited offset or rebuild a new consumer so it'll
+        reprocess the failed processed messages.
+        """
         while self.__is_running:
             messages = self.__consumer.consume(_BATCH_SIZE)
 
