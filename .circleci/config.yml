@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+  docker-build:
+    machine:
+      image: circleci/classic:latest
+
+references:
+  install_docker: &install_docker
+    name: Install Docker compose
+    command: |
+      curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+      chmod +x ~/docker-compose
+      sudo mv ~/docker-compose /usr/local/bin/docker-compose
+  set_image_tag: &set_image_tag
+    name: Set $IMAGE_TAG variable
+    command: echo 'export IMAGE_TAG=$CIRCLE_SHA1' >> $BASH_ENV
+jobs:
+  checks-tests:
+    executor: docker-build
+    steps:
+      - checkout
+      - run:
+          name: Install Docker compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run: cd checks/ && docker-compose build checks
+      - run: cd checks/ && docker-compose up -d test_kafka test_zookeeper
+      - run: sleep 20
+      - run: cd checks/ && docker-compose run tests_ci
+
+
+workflows:
+  version: 2
+  build_test_and_release:
+    jobs:
+      - checks-tests
