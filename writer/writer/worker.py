@@ -29,14 +29,18 @@ class Worker:
         while self.__is_running:
             messages = self.__consumer.consume(_BATCH_SIZE)
 
-            if messages:
-                log.info(
-                    'Running job %s for %d messages',
-                    type(self.__job).__name__,
-                    len(messages)
-                )
-                self.__job.run(self.__deserializer.loads(msg)
-                               for msg in messages)
+            if not messages:
+                self.__consumer.commit()
+
+                continue
+
+            log.info(
+                'Running job %s for %d messages',
+                type(self.__job).__name__,
+                len(messages)
+            )
+            self.__job.run(self.__deserializer.loads(msg)
+                           for msg in messages)
 
             self.__consumer.commit()
 
