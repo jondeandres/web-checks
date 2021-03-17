@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import time
 
 from checks.lib.job import Job
@@ -8,6 +9,9 @@ from checks.lib.writer import Writer
 
 _DEFAULT_PERIOD = 5
 _SLEEP_PERIOD = 1
+
+
+log = logging.getLogger(__name__)
 
 
 class Worker:
@@ -50,6 +54,13 @@ class Worker:
                 time.sleep(_SLEEP_PERIOD)
 
     async def run_job(self) -> None:
+        objects = self.__repository.get_objects()
+
+        log.info(
+            'Running job %s for %d objects',
+            type(self.__job).__name__,
+            len(objects)
+        )
         results = await asyncio.gather(*[
             self.__job.run(obj)
             for obj in self.__repository.get_objects()

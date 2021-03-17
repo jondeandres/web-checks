@@ -1,5 +1,6 @@
 import asyncio
 import argparse
+import logging
 
 from checks.worker import Worker
 from checks.repositories.hardcoded import HardCoded
@@ -10,8 +11,15 @@ from checks.lib.serializers import ResultToJSON
 from checks.jobs.http_check import HTTPCheck
 
 
+_DEFAULT_LOGGING_FORMAT = '%(asctime)s %(name)s %(levelname)-8s %(message)s'
+_LOGGING_OPTIONS = ['DEBUG', 'INFO', 'WARN', 'WARNING', 'ERROR', 'CRITICAL']
+
+
 def bootstrap() -> None:
     args = _parse_args()
+
+    logging.basicConfig(level=args.log_level,
+                        format=_DEFAULT_LOGGING_FORMAT)
 
     _run_worker(args)
 
@@ -31,6 +39,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--kafka-ssl-key-path")
     parser.add_argument("--kafka-ssl-cert-path")
     parser.add_argument("--kafka-ssl-ca-path")
+    parser.add_argument("--log-level", choices=_LOGGING_OPTIONS, default='INFO')
 
     return parser.parse_args()
 
