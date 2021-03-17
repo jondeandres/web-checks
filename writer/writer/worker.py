@@ -21,8 +21,11 @@ class Worker:
 
     def run(self) -> None:
         while self.__is_running:
-            self.__job.run(self.__deserializer.loads(msg)
-                           for msg in self.__consumer.consume(_BATCH_SIZE))
+            messages = self.__consumer.consume(_BATCH_SIZE)
+
+            if messages:
+                self.__job.run(self.__deserializer.loads(msg)
+                               for msg in messages)
 
             self.__consumer.commit()
 
