@@ -24,7 +24,9 @@ def bootstrap() -> None:
                       user=args.db_user,
                       password=args.db_password,
                       host=args.db_host,
-                      port=args.db_port)
+                      port=args.db_port,
+                      sslmode=args.db_sslmode,
+                      sslrootcert=args.db_sslrootcert)
     db.prepare_db(conn)
 
     _run_worker(args, conn)
@@ -38,6 +40,8 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--db-password", required=True)
     parser.add_argument("--db-host", required=True)
     parser.add_argument("--db-port", default='5432')
+    parser.add_argument("--db-sslmode", required=False)
+    parser.add_argument("--db-sslrootcert", required=False)
     parser.add_argument("--kafka-brokers", required=False, nargs='+')
     parser.add_argument("--kafka-topics", required=True, nargs='+')
     parser.add_argument("--kafka-group-id", required=True)

@@ -1,16 +1,22 @@
 import psycopg2
+import typing
 
 
 def connect(database: str,
             user: str,
             password: str,
             host: str,
-            port: str) -> psycopg2.extensions.connection:
+            port: str,
+            sslmode: typing.Optional[str] = None,
+            sslrootcert: typing.Optional[str] = None,
+            ) -> psycopg2.extensions.connection:
     return psycopg2.connect(database=database,
                             user=user,
                             password=password,
                             host=host,
-                            port=port)
+                            port=port,
+                            sslmode=sslmode,
+                            sslrootcert=sslrootcert)
 
 
 def prepare_db(conn: psycopg2.extensions.connection) -> None:
