@@ -10,6 +10,7 @@ services:
     tty: true
     volumes:
       - ./checks/:/app/
+      - ./data/:/data/
 
   writer:
     build:
@@ -20,6 +21,7 @@ services:
     tty: true
     volumes:
       - ./writer/:/app/
+      - ./data/:/data/
 
   kafka:
     image: confluentinc/cp-kafka:5.3.0
