@@ -8,6 +8,7 @@ from writer.worker import Worker
 from writer.deserializers.json_to_http_check_result import JSONToHTTPCheckResult
 from writer.jobs.write_http_check_results import WriteHTTPCheckResults
 from writer.lib.kafka.consumer import Consumer
+from writer.lib.kafka.config import Config as ConsumerConfig
 
 
 _DEFAULT_LOGGING_FORMAT = '%(asctime)s %(name)s %(levelname)-8s %(message)s'
@@ -55,11 +56,14 @@ def _parse_args() -> argparse.Namespace:
 
 def _run_worker(args: argparse.Namespace, conn: psycopg2.extensions.connection) -> None:
     consumer = Consumer(
-        args.kafka_topics,
-        {
-            'brokers': args.kafka_brokers,
-            'group_id': args.kafka_group_id
-        }
+        ConsumerConfig(
+            brokers=args.kafka_brokers,
+            topics=args.kafka_topics,
+            group_id=args.kafka_group_id,
+            ssl_key_path=args.kafka_ssl_key_path,
+            ssl_certificate_path=args.kafka_ssl_cert_path,
+            ssl_ca_path=args.kafka_ssl_ca_path
+        )
     )
     worker = Worker(
         consumer,
