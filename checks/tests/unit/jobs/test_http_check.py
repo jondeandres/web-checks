@@ -68,7 +68,7 @@ class TestHTTPCheck:
         target = Target(url='https://foo.com')
 
         with mock.patch('time.time') as time:
-            time.side_effect = [1000, 1001]
+            time.side_effect = [1000, 1001, 1002]
 
             with aioresponses() as http:
                 http.get('https://foo.com', exception=ClientError('Error connecting'))
@@ -76,7 +76,7 @@ class TestHTTPCheck:
                 result = event_loop.run_until_complete(self.job.run(target))
 
                 assert result == HTTPCheckResult(url='https://foo.com',
-                                                 response_time=1000,
+                                                 response_time=2000,
                                                  status_code=None,
                                                  re_match=None,
                                                  error="ClientError('Error connecting')")
