@@ -42,7 +42,7 @@ class TestWorker:
                                   daemon=True)
 
         app_thread.start()
-        time.sleep(2)
+        time.sleep(5)
 
         worker.stop()
         app_thread.join()
@@ -57,7 +57,7 @@ class TestWorker:
 
         consumer.subscribe([topic])
 
-        message = json.loads(consumer.consume(1, timeout=5)[0].value())
+        message = json.loads(consumer.consume(1, timeout=10)[0].value())
 
         assert message['url'] == 'https://aiven.io'
         assert type(message['status_code']) == int
