@@ -100,3 +100,9 @@ Things to improve:
 
 1. An index on `(url, timestamp)` would be very helpful to do queries per `url` and using a time range so we can do some `response_time` aggregations per time buckets, error rates, etc...
 2. We could shard the database using a `url` hash as key
+
+## Testing
+
+Each component, `writer` and `checks`, have tests and can be run using Docker Compose too, which is useful for the functional tests. In https://app.circleci.com/pipelines/github/jondeandres/web-checks we can see the public builds for the repository (Circleci free account is required).
+
+In `./circleci/config.yml` can be found details about how tests can be run.
